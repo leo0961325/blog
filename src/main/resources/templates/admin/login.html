@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:background-image="http://www.w3.org/1999/xhtml">
-<head>
+<html lang="en" xmlns:background-image="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog 管理登入頁面</title>
@@ -31,12 +31,13 @@
                         Blog Login Platform
                     </div>
                 </h2>
-                <form class="ui large form">
-                    <div class="ui stacked segment">
+<!--                方法用Post-->
+                <form class="ui large form" method="post" action="#">
+                    <div class="ui segment">
                         <div class="field">
                             <div class="ui left icon input">
                                 <i class="user icon"></i>
-                                <input type="text" name="email" placeholder="E-mail address">
+                                <input type="text" name="username" placeholder="Username">
                             </div>
                         </div>
                         <div class="field">
@@ -52,9 +53,7 @@
 
                 </form>
 
-                <div class="ui message">
-                    New to us? <a href="#">Sign Up</a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -64,18 +63,6 @@
 <!--/*/<th:block th:replace="_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
-<!--code prism js dependency-->
-<script src="../static/lib/prism/prism.js"></script>
-<!--TocBot dependency-->
-<script src="../static/lib/tocbot/tocbot.min.js"></script>
-<!--Qrcode dependency-->
-<script src="../static/lib/qrcode/qrcode.min.js"></script>
-<!--平滑滾動-->
-<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
-<!--waypoint-->
-<script src="../static/lib/waypoints/jquery.waypoints.min.js"></script>
-
 <!--/*/</th:block>/*/-->
 
 
