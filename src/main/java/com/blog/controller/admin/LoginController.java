@@ -24,11 +24,12 @@ public class LoginController {
     @GetMapping()
     public String loginPage(){
 
-
+        //這個是html
         return "admin/login";
     }
 
     //有使用HttpSession
+    //這裡是域名
     @PostMapping("/login")
     public String login(@RequestParam String username ,
                         @RequestParam String password,
