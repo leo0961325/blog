@@ -1,6 +1,9 @@
 package com.blog.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,7 @@ public class Type {
     @GeneratedValue
     private Long id;
 
+    @NotBlank(message = "分類類型不得為空")
     private String name;
 
     //對應Blog 一對多,關係被維護端mappedBy

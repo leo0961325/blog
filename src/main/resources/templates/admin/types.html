@@ -42,8 +42,8 @@
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="item">Post</a>
-            <a href="#" class="teal active item">List</a>
+            <a href="#" th:href="@{/admin/types/input}" class="item">Post</a>
+            <a href="#" th:href="@{/admin/types }" class="teal active item">List</a>
         </div>
 
     </div>
@@ -55,7 +55,7 @@
         <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
             <i class="close icon"></i>
             <div class="header">提示：</div>
-            <p th:text="${message}">恭喜，操作成功！</p>
+            <p th:text="${message}">這裡會被替換掉操作成功失敗</p>
         </div>
         <!--        表格-->
         <table class="ui celled table">
@@ -75,6 +75,7 @@
                 <td th:text="${type.name}">刻意練習清單</td>
                 <td>
                     <!--          編輯          input.id會替換前面的{id}-->
+                    <!--               透過這裡串接前後端api editInput -->
                     <a href="#" th:href="@{/admin/types/{id}/input(id=${type.id})}" class="ui mini teal basic button">Edit</a>
                     <!--          刪除          delete.id會替換前面的{id}-->
                     <a href="#" th:href="@{/admin/types/{id}/delete(id=${type.id})}" class="ui mini red  basic button">Delete</a>
@@ -181,11 +182,11 @@
     //消息提示關閉功能初始化
     //注意 層級 和 transition 和 .close的空格
     $('.message .close')
-        .on('click',function (){
+        .on('click', function () {
             $(this)
                 .closest('.message')
                 .transition('fade');
-    });
+        });
 
 </script>
 

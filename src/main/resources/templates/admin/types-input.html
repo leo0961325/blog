@@ -43,8 +43,8 @@
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="teal active item">Post</a>
-            <a href="#" class="item">List</a>
+            <a href="#" th:href="@{/admin/types/input}" class="teal active item">Post</a>
+            <a href="#" th:href="@{/admin/types }" class=" item">List</a>
         </div>
 
     </div>
@@ -54,26 +54,36 @@
 <div id="waypoint" class="m-container-small m-padded-tb-big animated fadeIn">
     <div class="ui container">
         <!--        Header-->
-<!--        Submit提交後返回types頁面-->
-        <form action="#" method="post" th:action = @{/admin/types} class="ui form">
-            <div class="field">
+        <!--        Submit提交後返回types頁面-->
+        <!--        th從後端取type物件-->
+        <form action="#" method="post"  th:object="${type}" th:action="*{id}==null ? @{/admin/types} : @{/admin/types/{id}(id=*{id})} "class="ui form">
+        <input type="hidden" name="id" th:value="*{id}">
+        <!--            加入required為必須驗證，但好像沒有差欸 -->
+            <div class="required field">
                 <div class="ui left labeled input">
                     <label class="ui teal basic label">分類名稱</label>
-                    <input type="text" name="name" placeholder="分類名稱">
+                    <!--                    type物件的name-->
+                    <input type="text" name="name" placeholder="分類名稱" th:value="*{name}">
                 </div>
             </div>
 
 
             <!--            表單驗證Error message-->
             <div class="ui error message"></div>
-
+<!--            thymeleaf的特殊註解使靜態頁面不生效展示，運行才啟動-->
+            <!--/*/
+                        <div class="ui negative message" th:if="${#fields.hasErrors('name')}"  >
+                            <i class="close icon"></i>
+                            <div class="header">驗證失敗</div>
+                            <p th:errors="*{name}">這裡會被取代掉的</p>
+                        </div>
+            /*/-->
 
             <!--            下面三個Button-->
-
             <div class="ui right aligned container">
                 <!--                button 要給他type，默認是提交表單 window.history.go(-1)返回上一個頁面-->
                 <button type="button" class="ui button" onclick="window.history.go(-1)">Turn Back</button>
-<!--                2/12 加入css submit提交自動提交-->
+                <!--                2/12 加入css submit提交自動提交-->
                 <button class="ui teal submit button">Submit</button>
             </div>
 
@@ -82,7 +92,6 @@
 
     </div>
 </div>
-
 
 
 <br>
@@ -162,13 +171,14 @@
         on: 'hover'
     });
     //Semantic web 的 Behaviors -> Form Validation
+    //表單驗證,不得為空,這裡對應ID name
     $('.ui.form').form({
         fields: {
             title: {
-                identifier: 'title',
+                identifier: 'name',
                 rules: [{
                     type: 'empty',
-                    prompt: 'Error Message : Please  key  in  Blog  title'
+                    prompt: '請輸入分類名稱'
                 }]
             }
         }

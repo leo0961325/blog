@@ -42,11 +42,24 @@ public class TypeService implements ITypeService {
         return iTypeRepository.getOne(id);
     }
 
+
+
+    @Transactional
+    @Override
+    public Type getTypeByname(String name) {
+        return iTypeRepository.findByName(name);
+    }
+
+
+
     @Transactional
     @Override
     public Page<Type> listType(Pageable pageable) {
         return iTypeRepository.findAll(pageable);
     }
+
+
+
 
     @Transactional
     @Override
