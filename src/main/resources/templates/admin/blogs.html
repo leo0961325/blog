@@ -18,7 +18,7 @@
             <a href="#" class="active m-item item m-mobile-hide"><i class=" home icon"></i>Blog</a>
             <a href="#" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分類</a>
             <a href="#" class="m-item item m-mobile-hide"><i class=" tags icon"></i>標籤</a>
-<!--            右邊管理者頭像-->
+            <!--            右邊管理者頭像-->
             <div class="right m-item m-mobile-hide menu">
                 <div class="ui dropdown item">
                     <div class="text">
@@ -53,77 +53,100 @@
 <div id="waypoint" class="m-container-small m-padded-tb-big animated fadeIn">
     <div class="ui container">
         <!--        Header-->
-        <form action="#" method="post" class="ui secondary segment form">
+        <div class="ui secondary segment form">
+            <!--            2021/02/20 提交表單提交資料到後台-->
+            <input type="hidden" name="page">
             <div class="inline fields">
                 <div class="field">
                     <input type="text" name="title" placeholder="Title">
                 </div>
                 <div class="field">
-                   <div class="ui selection dropdown">
-                       <input type="hidden" name="type">
-                       <i class="dropdown icon"></i>
-                       <div class="default text">Classification</div>
-                       <div class="menu">
-                           <div class="item" data-value = "1">日誌</div>
-                           <div class="item" data-value = "2">開發手冊</div>
-                       </div>
-                   </div>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="typeId">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">分類</div>
+                        <div class="menu">
+                            <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">日誌</div>
+                            <!--/*-->
+                            <div class="item" data-value="2">他的手可以穿過我的八八</div>
+                            <!--*/-->
+                        </div>
+                    </div>
                 </div>
 
                 <div class="field">
-<!--                    推薦勾選 for & id 呼應，點文字也可以-->
+                    <!--                    推薦勾選 for & id 呼應，點文字也可以-->
                     <div class="ui checkbox">
                         <input type="checkbox" id="recommend" name="recommend">
                         <label for="recommend">recommend</label>
                     </div>
                 </div>
-<!--                搜索按鈕-->
+                <!--                搜索按鈕-->
                 <div class="field">
-                    <button class="ui mini teal basic button"><i class="search icon"></i>Search</button>
+                    <button type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>Search</button>
                 </div>
             </div>
-        </form>
-<!--        表格-->
-        <table class="ui compact teal table">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Recommend</th>
-                <th>Update Time</th>
-                <th>operating</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>1</td>
-                <td>刻意練習清單</td>
-                <td>認知升級</td>
-                <td>是</td>
-                <td>2021-01-07 22:33</td>
-                <td>
-                    <a href="#" class="ui mini teal basic button">Edit</a>
-                    <a href="#" class="ui mini red  basic button">Delete</a>
-                </td>
-            </tr>
-            </tbody>
-            <tfoot>
-<!--            合併6列-->
-            <tr>
-                <th colspan="6">
-                    <div class="ui mini pagination menu">
-                        <a class="item">Last Page</a>
-                        <a class="item">Next Page</a>
-                    </div>
-                    <a href="#" class="ui mini right floated teal basic button">Add</a>
-                </th>
-            </tr>
-            </tfoot>
-        </table>
+        </div>
+        <!--        表格-->
+<!--      給他一個div id = table-containe -->
+        <div id="table-container">
+            <!--      透過th:fragment  blogList -->
+            <table th:fragment="blogList" class="ui compact teal table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Recommend</th>
+                    <th>Update Time</th>
+                    <th>operating</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--                    page json格式 https://www.wimdeblauwe.com/blog/2018/2018-06-10-pageimpl-json-serialization-with-spring-boot-2/-->
+                <tr th:each="blog.iterStat : ${page.content}">
+                    <td th:text="${iterStat.count}">1</td>
+                    <td th:text="${blog.title}">文章標題</td>
+                    <td th:text="${type.name}">分類名稱</td>
+                    <td th:text="${blog.recommend} ? '是':'否'">是否推薦</td>
+                    <td th:text="${blog.updateTime}">更新的時間</td>
+                    <td>
+                        <!--          編輯          input.id會替換前面的{id}-->
+                        <!--               透過這裡串接前後端api editInput -->
+                        <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}"
+                           class="ui mini teal basic button">Edit</a>
+                        <!--          刪除          delete.id會替換前面的{id}-->
+                        <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}"
+                           class="ui mini red basic button">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <!--            合併6列-->
+                <tr>
+                    <th colspan="6">
+                        <!--            增加如果只有一頁則不顯示上下頁button-->
+                        <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
+                            <!--                        上一頁和下一頁都是在content page裡面的number , 上一頁-1下一頁+1-->
+                            <!--                        th:unless 除非他是第一頁不然不跳轉;除非是最後一頁不然不跳轉-->
+                            <!--                        連結上面的input type="hidden" name="page"  和下面的JS方法連結-->
+                            <!--     th:attr 自定義屬性 名為data-page                   -->
+                            <a onclick="page(this)" th:attr="data-page=${page.number}-1)}" class="  item"
+                               th:unless="${page.first}">Last
+                                Page</a>
+                            <a onclick="page(this)" th:attr="data-page=${page.number}+1)}" class=" item"
+                               th:unless="${page.last}">Next
+                                Page</a>
+                        </div>
+                        <a href="#" class="ui mini right floated teal basic button">Add</a>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+
     </div>
 </div>
-
 
 
 <br>
@@ -166,8 +189,7 @@
 </footer>
 
 
-
-<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 <!--/*/</th:block>/*/-->
@@ -182,8 +204,30 @@
     //下拉選單 https://semantic-ui.com/modules/dropdown.html#/usage
 
     $('.ui.dropdown').dropdown({
-        on:'hover'
+        on: 'hover'
     });
+    
+    //page的賦值 拿到名為page的物件給予page data
+    function page(obj) {
+        $("[name='page']").val($(obj).data("page"));
+        //刷新後 不沖刷掉輸入的標題 和分類透過AJAX(局部刷新)
+        loaddata(); //點擊分頁也要用到的方法
+    }
+    //搜索按鈕點擊方法
+    $("#search-btn").click(function () {
+        loaddata();
+    });
+
+
+    //發送請求的jquery load方法
+    function loaddata() {
+        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
+            title : $("[name='title']").val(),
+            typeId : $("[name='typeId']").val(),
+            recommend : $("[name='recommend']").prop('checked'),
+            page : $("[name='page']").val()
+        });
+    }
 
 </script>
 

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -52,6 +53,12 @@ public class TagService implements ITagService {
         return itagRepository.findAll(pageable);
     }
 
+    @Override
+    public List<Tag> listTag() {
+        return itagRepository.findAll();
+    }
+
+
 
     @Transactional
     @Override
@@ -80,4 +87,6 @@ public class TagService implements ITagService {
 
         itagRepository.delete(tag);
     }
+
+
 }

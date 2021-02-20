@@ -5,6 +5,7 @@ import com.blog.model.Blog;
 import com.blog.model.Type;
 import com.blog.repository.IBlogRepository;
 import com.blog.service.IBlogService;
+import com.blog.vo.BlogQuery;
 import javassist.NotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class BlogService implements IBlogService {
 
     @Override
     @Transactional
-    public Page<Blog> listBlog(Pageable pageable, Blog blog) {
+    public Page<Blog> listBlog(Pageable pageable, BlogQuery blog) {
         //findAll 選 Specification 那一個
         return iBlogRepository.findAll(new Specification<Blog>() {
             //root 是查詢對象 , criteriaQuery 查詢容器 , criteriaBuilder條件表達式
@@ -56,9 +57,9 @@ public class BlogService implements IBlogService {
                     predicates.add(cb.like(root.get("title") ,"%"+blog.getTitle()+"%"));
                 }
                 //找分類
-                if (blog.getType().getId() != null){
+                if (blog.getTypeId() != null){
                     //拿到Type類型 type表裡面的ID
-                    predicates.add(cb.equal(root.<Type>get("type").get("id"), blog.getType().getId()));
+                    predicates.add(cb.equal(root.<Type>get("type").get("id"), blog.getTypeId()));
                 }
                 //是否推薦
                 if(blog.isRecommend()){

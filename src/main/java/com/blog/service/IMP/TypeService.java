@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,9 +56,15 @@ public class TypeService implements ITypeService {
     @Transactional
     @Override
     public Page<Type> listType(Pageable pageable) {
+        //網路上有pageable的json格式 https://www.wimdeblauwe.com/blog/2018/2018-06-10-pageimpl-json-serialization-with-spring-boot-2/
+
         return iTypeRepository.findAll(pageable);
     }
 
+    @Override
+    public List<Type> listType() {
+        return iTypeRepository.findAll();
+    }
 
 
 
@@ -89,4 +96,8 @@ public class TypeService implements ITypeService {
 
         iTypeRepository.delete(type);
     }
+
+
+
+
 }

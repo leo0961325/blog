@@ -84,6 +84,7 @@
             <tr>
                 <th colspan="6">
                     <!--            增加如果只有一頁則不顯示上下頁button-->
+<!--                    page json格式 https://www.wimdeblauwe.com/blog/2018/2018-06-10-pageimpl-json-serialization-with-spring-boot-2/-->
                     <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
                         <!--                        上一頁和下一頁都是在content page裡面的number , 上一頁-1下一頁+1-->
                         <!--                        th:unless 除非他是第一頁不然不跳轉;除非是最後一頁不然不跳轉-->
