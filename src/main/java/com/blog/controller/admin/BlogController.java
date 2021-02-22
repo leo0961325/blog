@@ -1,6 +1,7 @@
 package com.blog.controller.admin;
 
 
+import com.blog.model.Blog;
 import com.blog.service.IBlogService;
 import com.blog.service.ITagService;
 import com.blog.service.ITypeService;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class BlogController {
+
+    private static final String INPUT = "admin/blogs-input";
+    private static final String LIST = "admin/blogs";
+    private static final String REDIRECT_LIST = "redirect:/admin/blogs";
 
 
 
@@ -40,7 +45,7 @@ public class BlogController {
         model.addAttribute("types",iTypeService.listType());
         model.addAttribute("page", iBlogService.listBlog(pageable, blog));
 
-        return "admin/blogs";
+        return LIST;
     }
 
     /**
@@ -57,9 +62,20 @@ public class BlogController {
 
         model.addAttribute("page", iBlogService.listBlog(pageable, blog));
         //blogList 為 blogsAdmin底下的片段
-        return "admin/blogs :: blogList";
+        return REDIRECT_LIST;
 
 
+    }
+
+    @GetMapping("/blogs/input")
+    public String input(Model model){
+        //初始化
+        model.addAttribute("types",iTypeService.listType());
+        model.addAttribute("tags",iTagService.listTag());
+        model.addAttribute("blog" , new Blog());
+
+
+        return INPUT;
     }
 
 }

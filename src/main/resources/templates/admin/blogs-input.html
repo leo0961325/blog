@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog發布頁面</title>
@@ -12,7 +12,7 @@
 <body>
 
 <!--導航-->
-<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+<nav th:replace="admin/_fragments :: menu(1)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">Administration</h2>
@@ -51,12 +51,13 @@
 </div>
 
 <!--中間內容-->
-<div id="waypoint" class="m-container-small m-padded-tb-big animated fadeIn">
+<div class="m-container m-padded-tb-big animated fadeIn">
     <div class="ui container">
         <!--        Header-->
-        <form action="#" method="post" class="ui form">
+        <form id="blog-form" action="#" th:action="@{/admin/blogs}" method="post" class="ui form">
             <!--            下拉選單-->
-
+<!--            當點保存時為false 0 當點擊發布則為True 1-->
+            <input type="hidden" name="published">
             <!--required表單驗證配合下面JS-->
             <div class="required field">
                 <div class="ui left labeled input">
@@ -72,54 +73,29 @@
                             <div class="item" data-value="翻譯文學">翻譯文學</div>
                         </div>
                     </div>
+                    <!--            此處name 對應到的是 Model裡面blog的column-->
                     <input type="text" name="title" placeholder="Article title">
                 </div>
             </div>
 
-            <div class="field">
+            <div class="required field">
 <!--                插入MD語法區域  並且透過z-index放到最上方不會讓semantic蓋住-->
                 <div id="md-content" style="z-index: 1 !important;">
-                    <textarea name="content" placeholder="Article content" style="display: none">[TOC]
-
-#### Disabled options
-
-- TeX (Based on KaTeX);
-- Emoji;
-- Task lists;
-- HTML tags decode;
-- Flowchart and Sequence Diagram;
-
-#### Editor.md directory
-
-    editor.md/
-            lib/
-            css/
-            scss/
-            tests/
-            fonts/
-            images/
-            plugins/
-            examples/
-            languages/
-            editormd.js
-            ...
-
-                    </textarea>
+                    <textarea placeholder="BLOG内容" name="content" style="display: none" th:text="*{content}"></textarea>
                 </div>
             </div>
             <!--fluid稱滿-->
             <!--           分類和標籤-->
             <div class="two fields">
-                <div class="field">
+                <div class="required field">
                     <div class="ui left labeled action input">
-                        <label class="ui compact teal basic label">Classification</label>
+                        <label class="ui compact teal basic label">分類</label>
                         <div class="ui fluid selection dropdown">
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="type.id">
                             <i class="dropdown icon"></i>
-                            <div class="default text">Classification</div>
+                            <div class="default text">分類</div>
                             <div class="menu">
-                                <div class="item" data-value="1">錯誤日誌</div>
-                                <div class="item" data-value="2">開發者手冊</div>
+                                <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">日誌</div>
                             </div>
                         </div>
                     </div>
@@ -129,13 +105,11 @@
                         <label class="ui compact teal basic label">Label</label>
                         <!--                        標籤多個也可以搜索 multiple search 超神奇的-->
                         <div class="ui fluid selection multiple search  dropdown">
-                            <input type="hidden" name="tag">
+                            <input type="hidden" name="tagIds">
                             <i class="dropdown icon"></i>
                             <div class="default text">Label</div>
                             <div class="menu">
-                                <div class="item" data-value="1">Java</div>
-                                <div class="item" data-value="2">Python</div>
-                                <div class="item" data-value="3">MySQL</div>
+                                <div th:each="tag : ${tags}" class="item" data-value="1" th:data-value="${tag.id}" th:text="${tag.name}">Java</div>
                             </div>
                         </div>
                     </div>
@@ -143,16 +117,16 @@
             </div>
 
 
-            <div class="field">
+            <div class="required field">
                 <div class="ui left labeled input">
                     <label class="ui teal basic label">Photo Address</label>
-                    <input type="text" name="indexPicture" placeholder="Photo Address">
+                    <input type="text" name="firstPicture" placeholder="Photo Address">
                 </div>
             </div>
 
-
             <!--checkbox 包含:推薦 分享 打賞 評論-->
             <!--            checked 先選擇默認-->
+<!--            此處id 對應到的是 Model裡面blog的column-->
             <div class="inline fields">
                 <div class="field">
                     <div class="ui checkbox">
@@ -162,8 +136,8 @@
                 </div>
                 <div class="field">
                     <div class="ui checkbox">
-                        <input type="checkbox" id="shareInfo" name="shareInfo" class="hidden">
-                        <label for="shareInfo">shareInfo</label>
+                        <input type="checkbox" id="shareStatement" name="shareStatement" class="hidden">
+                        <label for="shareStatement">shareInfo</label>
                     </div>
                 </div>
                 <div class="field">
@@ -174,8 +148,8 @@
                 </div>
                 <div class="field">
                     <div class="ui checkbox">
-                        <input type="checkbox" id="comment" name="comment" class="hidden">
-                        <label for="comment">comment</label>
+                        <input type="checkbox" id="commentaled" name="commentaled" class="hidden">
+                        <label for="commentaled">comment</label>
                     </div>
                 </div>
             </div>
@@ -189,8 +163,8 @@
             <div class="ui right aligned container">
                 <!--                button 要給他type，默認是提交表單 window.history.go(-1)返回上一個頁面-->
                 <button type="button" class="ui button" onclick="window.history.go(-1)">Turn Back</button>
-                <button class="ui secondary button">Save</button>
-                <button class="ui teal button">Submit</button>
+                <button type="button" id="save-btn" class="ui secondary button">Save</button>
+                <button type="button" id="publish-btn" class="ui teal button">Submit</button>
             </div>
 
 
@@ -203,7 +177,7 @@
 <br>
 <br>
 <!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
@@ -239,25 +213,24 @@
 
 </footer>
 
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
-<!--MD Jquery dependency-->
-<script src="../../static/lib/editormd/editormd.min.js"></script>
+<!--/*/</th:block>/*/-->
+
 
 <script>
 
     // 初始化MD IDE
     var contentEditor;
-
     $(function() {
         contentEditor = editormd("md-content", {
             width   : "100%",
             height  : 640,
             syncScrolling : "single",
-            path    : "../../static/lib/editormd/lib/"
+//        path    : "../static/lib/editormd/lib/"
+            path    : "/lib/editormd/lib/"
         });
-
     });
 
 
@@ -271,14 +244,49 @@
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-    //Semantic web 的 Behaviors -> Form Validation
+
+    //當點擊保存時處理方式
+    $('#save-btn').click(function () {
+        $('[name="published"]').val(false);
+        $('#blog-form').submit();
+    });
+
+    //當點擊發布時處理方式
+    $('#publish-btn').click(function () {
+        $('[name="published"]').val(true);
+        $('#blog-form').submit();
+    });
+
+
+    //Semantic web 的 Behaviors -> Form Validation校驗
     $('.ui.form').form({
-        fields: {
-            title: {
+        fields : {
+            title : {
                 identifier: 'title',
                 rules: [{
-                    type: 'empty',
-                    prompt: 'Error Message : Please  key  in  Blog  title'
+                    type : 'empty',
+                    prompt: '標題:請輸入Blog title'
+                }]
+            },
+            content : {
+                identifier: 'content',
+                rules: [{
+                    type : 'empty',
+                    prompt: '標題:請輸入Blog 內容'
+                }]
+            },
+            typeId : {
+                identifier: 'type.id',
+                rules: [{
+                    type : 'empty',
+                    prompt: '標題:請輸入Blog 分類'
+                }]
+            },
+            firstPicture : {
+                identifier: 'firstPicture',
+                rules: [{
+                    type : 'empty',
+                    prompt: '標題:請輸入Blog 圖片'
                 }]
             }
         }
