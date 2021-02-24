@@ -15,7 +15,10 @@ public class Blog {
     @GeneratedValue
     private Long id;
     private String title;
-    private String content;
+
+    @Basic(fetch = FetchType.LAZY) //註解，大字段類型也可以適應文章內容，初始化適用
+    @Lob
+    private String content; //文章內容太長，SQL類型改成longtext
     private String firstPicture;
     private String flag;
     private Integer views;
@@ -47,6 +50,15 @@ public class Blog {
     //對於comments,Blog屬於被維護方
     @OneToMany(mappedBy = "blog")
     private List<Comment> comments =new ArrayList<>();
+
+    /**
+     * @transient 就是在给某个javabean上需要添加个属性，但是这个属性你又不希望给存到数据库中去，仅仅是做个临时变量，用一下。不修改已经存在数据库的数据的数据结构。
+     */
+    @Transient
+    private String tagIds;
+
+    @Transient
+    private String typeIds;
 
 
     public Blog() {
@@ -186,6 +198,22 @@ public class Blog {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(String tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public String getTypeIds() {
+        return typeIds;
+    }
+
+    public void setTypeIds(String typeIds) {
+        this.typeIds = typeIds;
     }
 
     @Override

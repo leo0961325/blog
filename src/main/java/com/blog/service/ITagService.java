@@ -25,4 +25,6 @@ public interface ITagService {
     void deleteTag(Long id);
 
     List<Tag> listTag();
+
+    List<Tag> listTag(String ids);
 }

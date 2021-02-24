@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,23 @@ public class TagService implements ITagService {
         return itagRepository.findAll();
     }
 
+    @Override
+    public List<Tag> listTag(String ids) {
+        //選用iterator的那一個JPA
+        return itagRepository.findAllById(convertToList(ids));
+    }
+
+    //轉換成List
+    private List<Long> convertToList(String ids){
+        List<Long> list = new ArrayList<>();
+        if ("".equals(ids) && ids != null){
+            String[] idarray = ids.split(",");
+            for (int i=0 ; i < idarray.length ; i++){
+                list.add(new Long(idarray[i]));
+            }
+        }
+        return list;
+    }
 
 
     @Transactional

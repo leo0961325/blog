@@ -66,7 +66,9 @@
                         <i class="dropdown icon"></i>
                         <div class="default text">分類</div>
                         <div class="menu">
-                            <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">日誌</div>
+                            <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}"
+                                 th:text="${type.name}">日誌
+                            </div>
                             <!--/*-->
                             <div class="item" data-value="2">他的手可以穿過我的八八</div>
                             <!--*/-->
@@ -83,12 +85,13 @@
                 </div>
                 <!--                搜索按鈕-->
                 <div class="field">
-                    <button type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>Search</button>
+                    <button type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>Search
+                    </button>
                 </div>
             </div>
         </div>
         <!--        表格-->
-<!--      給他一個div id = table-containe -->
+        <!--      給他一個div id = table-containe -->
         <div id="table-container">
             <!--      透過th:fragment  blogList -->
             <table th:fragment="blogList" class="ui compact teal table">
@@ -104,10 +107,11 @@
                 </thead>
                 <tbody>
                 <!--                    page json格式 https://www.wimdeblauwe.com/blog/2018/2018-06-10-pageimpl-json-serialization-with-spring-boot-2/-->
-                <tr th:each="blog.iterStat : ${page.content}">
+                <!--       blog,iterStat 中間是逗號 不是 . . . .!         -->
+                <tr th:each="blog,iterStat : ${page.content}">
                     <td th:text="${iterStat.count}">1</td>
                     <td th:text="${blog.title}">文章標題</td>
-                    <td th:text="${type.name}">分類名稱</td>
+                    <td th:text="${blog.type.name}">分類名稱</td>
                     <td th:text="${blog.recommend} ? '是':'否'">是否推薦</td>
                     <td th:text="${blog.updateTime}">更新的時間</td>
                     <td>
@@ -122,27 +126,30 @@
                 </tr>
                 </tbody>
                 <tfoot>
-                <!--            合併6列-->
+                <!--            合併7列-->
                 <tr>
-                    <th colspan="6">
+                    <th colspan="7">
                         <!--            增加如果只有一頁則不顯示上下頁button-->
                         <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
                             <!--                        上一頁和下一頁都是在content page裡面的number , 上一頁-1下一頁+1-->
                             <!--                        th:unless 除非他是第一頁不然不跳轉;除非是最後一頁不然不跳轉-->
                             <!--                        連結上面的input type="hidden" name="page"  和下面的JS方法連結-->
-                            <!--     th:attr 自定義屬性 名為data-page                   -->
-                            <a onclick="page(this)" th:attr="data-page=${page.number}-1)}" class="  item"
-                               th:unless="${page.first}">Last
-                                Page</a>
-                            <a onclick="page(this)" th:attr="data-page=${page.number}+1)}" class=" item"
-                               th:unless="${page.last}">Next
-                                Page</a>
+                            <a onclick="page(this)" th:attr="data-page=${page.number}-1" class="item" th:unless="${page.first}">Last Page</a>
+                            <a onclick="page(this)" th:attr="data-page=${page.number}+1" class="item" th:unless="${page.last}">Next Page</a>
                         </div>
-                        <a href="#" th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">Add</a>
+                        <a href="#" th:href="@{/admin/blogs/input}"
+                           class="ui mini right floated teal basic button">Add</a>
                     </th>
                 </tr>
                 </tfoot>
             </table>
+            <!--     提示消息       -->
+            <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+                <i class="close icon"></i>
+                <div class="header">提示：</div>
+                <p th:text="${message}">這裡會被替換掉操作成功失敗</p>
+            </div>
+
         </div>
 
     </div>
@@ -206,13 +213,14 @@
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-    
+
     //page的賦值 拿到名為page的物件給予page data
     function page(obj) {
         $("[name='page']").val($(obj).data("page"));
         //刷新後 不沖刷掉輸入的標題 和分類透過AJAX(局部刷新)
         loaddata(); //點擊分頁也要用到的方法
     }
+
     //搜索按鈕點擊方法
     $("#search-btn").click(function () {
         loaddata();
@@ -221,13 +229,22 @@
 
     //發送請求的jquery load方法
     function loaddata() {
-        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
-            title : $("[name='title']").val(),
-            typeId : $("[name='typeId']").val(),
-            recommend : $("[name='recommend']").prop('checked'),
-            page : $("[name='page']").val()
+        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search", {
+            title: $("[name='title']").val(),
+            typeId: $("[name='typeId']").val(),
+            recommend: $("[name='recommend']").prop('checked'),
+            page: $("[name='page']").val()
         });
     }
+
+    //消息提示關閉功能初始化
+    //注意 層級 和 transition 和 .close的空格
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade');
+        });
 
 </script>
 

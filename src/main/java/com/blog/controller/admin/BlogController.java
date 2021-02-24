@@ -2,6 +2,7 @@ package com.blog.controller.admin;
 
 
 import com.blog.model.Blog;
+import com.blog.model.User;
 import com.blog.service.IBlogService;
 import com.blog.service.ITagService;
 import com.blog.service.ITypeService;
@@ -15,6 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/admin")
@@ -67,6 +71,11 @@ public class BlogController {
 
     }
 
+    /**
+     * 輸入發布畫面
+     * @param model
+     * @return
+     */
     @GetMapping("/blogs/input")
     public String input(Model model){
         //初始化
@@ -76,6 +85,32 @@ public class BlogController {
 
 
         return INPUT;
+    }
+
+
+    /**
+     * 新增和修改共用的方法
+     * @return
+     */
+    @PostMapping("/blogs")
+    public String post(Blog blog , HttpSession session , RedirectAttributes attributes){
+        //用session 拿到當前User的資料
+        blog.setUser((User) session.getAttribute("user"));
+        blog.setType(iTypeService.getType(blog.getType().getId()));
+        blog.setTags(iTagService.listTag(blog.getTagIds()));
+
+        Blog blogSave = iBlogService.saveBlog(blog);
+
+        if (blogSave == null){
+            //操作消息顯示RedirectAttributes
+            //渲染到blog的message search:提示
+            attributes.addFlashAttribute("message","操作失敗！");
+        }
+        else {
+            attributes.addFlashAttribute("message","操作成功!!");
+        }
+
+        return REDIRECT_LIST;
     }
 
 }

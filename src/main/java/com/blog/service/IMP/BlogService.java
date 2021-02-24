@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,9 @@ public class BlogService implements IBlogService {
     @Transactional
     public Blog saveBlog(Blog blog) {
 
+        blog.setCreateTime(new Date());
+        blog.setUpdateTime(new Date());
+        blog.setViews(0); //初始瀏覽次數
 
         return iBlogRepository.save(blog);
     }
