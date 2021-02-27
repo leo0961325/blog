@@ -87,6 +87,7 @@ public class BlogService implements IBlogService {
         //Edit如果有就編輯
         else {
             //修正編輯時候CreateTime和Views會被洗掉問題 之後看有沒要在修正 2/27
+            //其實好像也不用用到Optional好像有點多此一舉,前面也沒用
             Optional<Blog> findBlogById = iBlogRepository.findById(blog.getId());
             blog.setCreateTime(findBlogById.get().getCreateTime());
             blog.setViews(findBlogById.get().getViews());
