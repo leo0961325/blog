@@ -8,7 +8,9 @@ import com.blog.service.ITagService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by limi on 2017/10/16.
- */
+
 @Service
 public class TagService implements ITagService {
 
@@ -55,6 +55,19 @@ public class TagService implements ITagService {
     }
 
     @Override
+    public List<Tag> listTagTop(Integer size) {
+
+        //https://blog.csdn.net/weixin_44216706/article/details/106480251
+        //查看源码，原来是Sort的构造器私有了private；所以不能通过new Sort()的方式来创建Sort对象
+        Sort sort = Sort.by(Sort.Direction.DESC  , "blogs.size");
+
+        //https://stackoverflow.com/questions/44848653/pagerequest-constructors-have-been-deprecated
+        Pageable pageable = PageRequest.of(0,size,sort);
+
+        return itagRepository.findTop(pageable);
+    }
+
+    @Override
     public List<Tag> listTag() {
         return itagRepository.findAll();
     }
@@ -64,6 +77,8 @@ public class TagService implements ITagService {
         //選用iterator的那一個JPA
         return itagRepository.findAllById(convertToList(ids));
     }
+
+
 
     //轉換成List
     private List<Long> convertToList(String ids){

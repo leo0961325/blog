@@ -20,6 +20,8 @@ public interface ITagService {
 
     Page<Tag> listTag(Pageable pageable);
 
+    List<Tag> listTagTop(Integer size);
+
     Tag updateTag(Long id, Tag type);
 
     void deleteTag(Long id);

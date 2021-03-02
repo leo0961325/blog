@@ -39,7 +39,7 @@ public class BlogService implements IBlogService {
     }
 
 
-
+    //有對象的查詢
     @Override
     public Page<Blog> listBlog(Pageable pageable, BlogQuery blog) {
         //findAll 選 Specification 那一個
@@ -72,6 +72,13 @@ public class BlogService implements IBlogService {
         } , pageable);
 
     }
+
+    //沒使用查詢功能的
+    @Override
+    public Page<Blog> listBlog(Pageable pageable) {
+        return iBlogRepository.findAll(pageable);
+    }
+
 
     @Transactional
     @Override
