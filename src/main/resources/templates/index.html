@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--thymeleaf引用fragments，不用每個都加 做到前後端可以分離-->
 <head th:replace="_fragments :: head(~{::title})">
     <meta charset="UTF-8">
@@ -83,7 +83,7 @@
                                         </div>
                                     </div>
                                     <div class="right aligned five wide column">
-                                        <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">认知升级</a>
+                                        <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">這裡會被替換</a>
                                     </div>
                                 </div>
                             </div>
@@ -470,7 +470,7 @@
                     <!--*/-->
                 </div>
 
-                <!--footer-->
+                <!--footer分頁-->
                 <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
                     <div class="ui middle aligned two column grid">
                         <div class="column">

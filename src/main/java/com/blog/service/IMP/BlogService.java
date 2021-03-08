@@ -82,6 +82,12 @@ public class BlogService implements IBlogService {
     }
 
     @Override
+    public Page<Blog> listBlog(String query, Pageable pageable) {
+        return iBlogRepository.findByQuery(query, pageable);
+    }
+
+
+    @Override
     public List<Blog> listRecommendBlog(Integer size) {
 
         //https://blog.csdn.net/weixin_44216706/article/details/106480251

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--thymeleaf依賴-->
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
@@ -32,10 +32,15 @@
             <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active' "><i class="info icon"></i>關於我</a>
             <!--               右邊的搜尋框-->
             <div class="right item m-mobile-hide">
-                <div class="ui icon inverted transparent input">
-                    <input type="text" placeholder="Search....">
-                    <i class="search link icon"></i>
-                </div>
+                <!--                搜尋註解-->
+                <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon inverted transparent input m-margin-tb-tiny">
+<!--                        query 對應IndexController search API paramter-->
+                        <input type="text" name="query" placeholder="Search...." th:value="${query}">
+                        <!--搜尋點擊註解-->
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
             </div>
             <!--               -->
         </div>
@@ -99,7 +104,8 @@
     <!--平滑滾動-->
     <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
     <!--waypoint-->
-    <script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+    <script src="../static/lib/waypoints/jquery.waypoints.min.js"
+            th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
 
 </th:block>
 

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -49,6 +51,19 @@ public class IndexController {
         //如果是資料夾下要在加 dir/index
         return "index";
     }
+
+    @PostMapping("/search")
+    public String search(@PageableDefault(size = 5, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                         @RequestParam String query , Model model){
+
+        //像是SQL語句 %LIKE% 的查詢方法
+        model.addAttribute("page",iBlogService.listBlog("%"+query+"%",pageable));
+        //將查詢字符串返回頁面上去
+        model.addAttribute("query",query);
+
+        return "search";
+    }
+
 
     @GetMapping(value = "/blog/{id}")
     public String blog() {
