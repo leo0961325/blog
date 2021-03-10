@@ -855,7 +855,7 @@ h5,h6{font-size:1em;}
             "content" : $("[name='content']").val()
         },function (responseTxt, statusTxt, xhr) {
             //提交後scrollTo滾動到的區域#comment-container,時間間隔500m
-//        $(window).scrollTo($('#comment-container'),500);
+        $(window).scrollTo($('#comment-container'),500);
             //提交之後的動作
             clearContent();
         });
