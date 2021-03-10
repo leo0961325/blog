@@ -521,87 +521,95 @@ h5,h6{font-size:1em;}
             </div>
         </div>
     </div>
-    <!--  comment-container 留言button 跳轉  -->
-    <div id="comment-container" class="ui bottom attached segment">
+
+    <div  class="ui bottom attached segment">
         <!--留言區域列表-->
-        <div class="ui teal segment">
-            <div class="ui threaded comments">
-                <h3 class="ui dividing header">Comments</h3>
-                <div class="comment">
-                    <a class="avatar">
-                        <img src="https://unsplash.it/100/100?image=1005">
-                    </a>
-                    <div class="content">
-                        <a class="author">Matt</a>
-                        <div class="metadata">
-                            <span class="date">Today at 5:42PM</span>
-                        </div>
-                        <div class="text">
-                            How artistic!
-                        </div>
-                        <div class="actions">
-                            <a class="reply">Reply</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment">
-                    <a class="avatar">
-                        <img src="https://unsplash.it/100/100?image=1006">
-                    </a>
-                    <div class="content">
-                        <a class="author">Elliot Fu</a>
-                        <div class="metadata">
-                            <span class="date">Yesterday at 12:30AM</span>
-                        </div>
-                        <div class="text">
-                            <p>This has been very useful for my research. Thanks as well!</p>
-                        </div>
-                        <div class="actions">
-                            <a class="reply">Reply</a>
+        <!--  comment-container 留言button 跳轉  -->
+        <div id="comment-container" class="ui teal segment">
+            <div th:fragment="commentList">
+                <div class="ui threaded comments" style="max-width: 100%;">
+                    <h3 class="ui dividing header">評論特區</h3>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="https://unsplash.it/100/100?image=1005">
+                        </a>
+                        <div class="content">
+                            <a class="author">Matt</a>
+                            <div class="metadata">
+                                <span class="date">Today at 5:42PM</span>
+                            </div>
+                            <div class="text">
+                                How artistic!
+                            </div>
+                            <div class="actions">
+<!--                                當點擊回覆時:  ，並且定義兩個自定義屬性data-commentid和data-commentnickname-->
+                                <a class="reply" data-commentid="1" data-commentnickname="Matt"  onclick="reply(this)">Reply</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="comments">
-                        <div class="comment">
-                            <a class="avatar">
-                                <img src="https://unsplash.it/100/100?image=1006">
-                            </a>
-                            <div class="content">
-                                <a class="author">Jenny Hess</a>
-                                <div class="metadata">
-                                    <span class="date">Just now</span>
-                                </div>
-                                <div class="text">
-                                    Elliot you are always so right :)
-                                </div>
-                                <div class="actions">
-                                    <a class="reply">Reply</a>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="https://unsplash.it/100/100?image=1006">
+                        </a>
+                        <div class="content">
+                            <a class="author">Elliot Fu</a>
+                            <div class="metadata">
+                                <span class="date">Yesterday at 12:30AM</span>
+                            </div>
+                            <div class="text">
+                                <p>This has been very useful for my research. Thanks as well!</p>
+                            </div>
+                            <div class="actions">
+                                <a class="reply">Reply</a>
+                            </div>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <a class="avatar">
+                                    <img src="https://unsplash.it/100/100?image=1006">
+                                </a>
+                                <div class="content">
+                                    <a class="author">Jenny Hess</a>
+                                    <div class="metadata">
+                                        <span class="date">Just now</span>
+                                    </div>
+                                    <div class="text">
+                                        Elliot you are always so right :)
+                                    </div>
+                                    <div class="actions">
+                                        <a class="reply">Reply</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="comment">
-                    <a class="avatar">
-                        <img src="https://unsplash.it/100/100?image=1005">
-                    </a>
-                    <div class="content">
-                        <a class="author">Joe Henderson</a>
-                        <div class="metadata">
-                            <span class="date">5 days ago</span>
-                        </div>
-                        <div class="text">
-                            Dude, this is awesome. Thanks so much
-                        </div>
-                        <div class="actions">
-                            <a class="reply">Reply</a>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="https://unsplash.it/100/100?image=1005">
+                        </a>
+                        <div class="content">
+                            <a class="author">Joe Henderson</a>
+                            <div class="metadata">
+                                <span class="date">5 days ago</span>
+                            </div>
+                            <div class="text">
+                                Dude, this is awesome. Thanks so much
+                            </div>
+                            <div class="actions">
+                                <a class="reply">Reply</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="ui form">
+        <div id="comment-form" class="ui form">
+<!--            隱含域，name來接收blog.id th:value取值-->
+            <input type="hidden" name="blog.id" th:value="${blog.id}">
+<!--            回覆留言,value=-1表示初始值為空-->
+            <input type="hidden" name="parentComment.id" value="-1">
             <div class="field">
-                <textarea name="content" placeholder="Please enter you comment"></textarea>
+                <textarea name="content" placeholder="請輸入你要評論的內容"></textarea>
             </div>
             <div class="fields">
                 <div class="field m-mobile-wide m-margin-bottom-small">
@@ -613,11 +621,12 @@ h5,h6{font-size:1em;}
                 <div class="field m-mobile-wide m-margin-bottom-small">
                     <div class="ui left icon input">
                         <i class="mail icon"></i>
+<!--                        name為email就有它的正則表達式規則-->
                         <input type="text" name="email" placeholder="Email">
                     </div>
                 </div>
                 <div class="field  m-margin-bottom-small m-mobile-wide">
-                    <button class="ui teal button m-mobile-wide"><i class="edit icon"></i>Post Comment</button>
+                    <button id="commentpost-btn" type="button" class="ui teal button m-mobile-wide"><i class="edit icon"></i>發布內容</button>
                 </div>
             </div>
 
@@ -794,6 +803,85 @@ h5,h6{font-size:1em;}
             console.log('Scrolled to waypoint!'+ direction)
         }
     })
+
+
+    //評論前台驗證
+    $('.ui.form').form({
+        fields: {
+            title: {
+                identifier: 'content',
+                rules: [{
+                    type: 'empty',
+                    prompt: '請輸入評論內容 --JS'
+                }
+                ]
+            },
+            content: {
+                identifier: 'nickname',
+                rules: [{
+                    type: 'empty',
+                    prompt: '請輸入名字 --JS'
+                }]
+            },
+            type: {
+                identifier: 'email',
+                rules: [{
+                    type: 'email',
+                    prompt: '請輸入正確Email --JS'
+                }]
+            }
+        }
+    });
+
+    //當點擊發布請求，並且驗證ui.form
+    $('#commentpost-btn').click(function () {
+       var boo =  $('.ui.form').form('validate form');
+       if(boo){
+           //在F12 console
+           console.log("驗證成功!");
+       }else {
+           console.log("驗證失敗!");
+       }
+    });
+
+
+    //提交數據的function，傳值到後台
+    function postData() {
+        $("#comment-container").load(/*[[@{/comments}]]*/"",{
+            "parentComment.id" : $("[name='parentComment.id']").val(),
+            "blog.id" : $("[name='blog.id']").val(),
+            "nickname": $("[name='nickname']").val(),
+            "email"   : $("[name='email']").val(),
+            "content" : $("[name='content']").val()
+        },function (responseTxt, statusTxt, xhr) {
+            //提交後scrollTo滾動到的區域#comment-container,時間間隔500m
+//        $(window).scrollTo($('#comment-container'),500);
+            //提交之後的動作
+            clearContent();
+        });
+    }
+    //清除內容
+    function clearContent() {
+        $("[name='content']").val('');
+        $("[name='parentComment.id']").val(-1);
+        $("[name='content']").attr("placeholder", "請輸入你想表達的評論");
+    }
+
+    //回覆留言處理
+    function reply(obj) {
+        //使用data方法只需要拿到後綴data-commentid的commentid
+       var commentId = $(obj).data('commentid');
+        //使用data方法只需要拿到後綴data-commentnickname的commentnickname(要小寫的不然娶不到值)
+       var commentNickname = $(obj).data('commentnickname');
+       //標註人名使用，好用 例如@Harvey人名
+       $("[name='content']").attr("placeholder", "@"+commentNickname).focus();
+       //賦值
+       $("[name='parentComment.id']").val(commentId);
+       //當點擊時到id= comment-form 的位置
+       $(window).scrollTo($('#comment-form'),500);
+    }
+
+
 </script>
 
 </body>
