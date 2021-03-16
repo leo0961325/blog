@@ -32,7 +32,7 @@ public class CommentController {
 
         model.addAttribute("comments" , iCommentService.listCommentByBlogId(blogId));
 
-        //返回Blog頁面下的commentList
+        //返回Blog頁面下的commentList，局部刷新commentList
         return "blog :: commentList";
     }
 

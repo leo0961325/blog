@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface ICommentRepository extends JpaRepository<Comment , Long> {
 
-
-    List<Comment> findByBlogId(Long blogId , Sort sort);
+    //findByBlogIdAndParentCommentNot JPA提供方法，只找父級為空(即為頂級節點)
+    List<Comment> findByBlogIdAndParentCommentNull(Long blogId , Sort sort);
 
 
 

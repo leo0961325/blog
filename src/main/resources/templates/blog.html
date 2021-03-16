@@ -545,6 +545,31 @@ h5,h6{font-size:1em;}
 <!--                                當點擊回覆時:  ，並且定義兩個自定義屬性data-commentid和data-commentnickname-->
                                 <a class="reply" data-commentid="1" data-commentnickname="Matt" th:attr="data-commentid=${comment.id},data-commentnickname=${comment.nickname}"  onclick="reply(this)">Reply</a>
                             </div>
+                            </div>
+<!--                        第二層回覆要加上判斷式-->
+                            <div class="comments" th:if="${#arrays.length(comment.replyComments)}>0">
+                                <div class="comment" th:each="reply : ${comment.replyComments}">
+                                    <a class="avatar">
+                                        <img src="https://unsplash.it/100/100?image=1005" th:src="@{${reply.avatar}}">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author">
+                                            <span th:text="${reply.nickname}">回復者</span>
+                                            &nbsp;<span th:text="|@ ${reply.parentComment.nickname}|" class="m-teal">標記人</span>
+                                        </a>
+                                        <div class="metadata">
+                                            <span class="date" th:text="${#dates.format(reply.createTime , 'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                        </div>
+                                        <div class="text" th:text="${reply.content}">
+                                            How artistic!
+                                        </div>
+                                        <div class="actions">
+                                            <!--                                當點擊回覆時:  ，並且定義兩個自定義屬性data-commentid和data-commentnickname-->
+                                            <a class="reply" data-commentid="1" data-commentnickname="Matt" th:attr="data-commentid=${reply.id},data-commentnickname=${reply.nickname}"  onclick="reply(this)">Reply</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!--/*-->
@@ -836,6 +861,13 @@ h5,h6{font-size:1em;}
         }
     });
 
+    //當提交後返回的是評論畫面comment-container區域，而非刷新到最上面
+    $(function () {
+        $("#comment-container").load(/*[[@{/comments/{id}(id=${blog.id})}]]*/"comments/6");
+    });
+
+
+
     //當點擊發布請求，並且驗證ui.form
     $('#commentpost-btn').click(function () {
        var boo =  $('.ui.form').form('validate form');
@@ -851,6 +883,7 @@ h5,h6{font-size:1em;}
 
 
     //提交數據的function，傳值到後台
+    //發送按鈕
     function postData() {
         $("#comment-container").load(/*[[@{/comments}]]*/"",{
             "parentComment.id" : $("[name='parentComment.id']").val(),
