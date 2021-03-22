@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>標籤頁面</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <title>標籤</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css">
 </head>
 <body>
 
 <!--導航-->
-<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+<nav th:replace="_fragments :: menu(3)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">Blog</h2>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" home icon"></i>首頁</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分類</a>
-            <a href="#" class="active m-item item m-mobile-hide"><i class=" tags icon"></i>標籤</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" clone icon"></i>歸檔</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" info icon"></i>關於我</a>
+            <a href="#" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首頁</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分類</a>
+            <a href="#" class="active m-item item m-mobile-hide"><i class="mini tags icon"></i>標籤</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>歸檔</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini info icon"></i>關於我</a>
             <div class="right m-item item m-mobile-hide">
                 <div class="ui icon inverted transparent input m-margin-tb-tiny">
                     <input type="text" placeholder="Search....">
@@ -27,372 +27,85 @@
             </div>
         </div>
     </div>
-    <!--    下拉選單按鈕-->
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
 </nav>
 
 <!--中間內容-->
-<div id="waypoint" class="m-container-small m-padded-tb-big animated fadeIn">
+<div  class="m-container-small m-padded-tb-big">
     <div class="ui container">
-        <!--        Header-->
+        <!--header-->
         <div class="ui top attached segment">
             <div class="ui middle aligned two column grid">
                 <div class="column">
                     <h3 class="ui teal header">標籤</h3>
                 </div>
                 <div class="right aligned column">
-                    共<h2 class="ui orange header m-inline-block m-text-thin">14</h2>個
+                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${#arrays.length(tags)}"> 14 </h2> 個
                 </div>
             </div>
         </div>
+
         <div class="ui attached segment m-padded-tb-large">
-            <!--        Button 和 label標籤-->
-            <a href="#" target="_blank" class="ui teal basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
-            </a>
-            <a href="#" target="_blank" class="ui basic left pointing large label m-margin-tb-tiny">
-                方法論
-                <div class="detail">23</div>
+            <a href="#" th:href="@{/tags/{id}(id=${tag.id})}"  class="ui basic left pointing large label m-margin-tb-tiny" th:classappend="${tag.id==activeTagId} ? 'teal'" th:each="tag : ${tags}">
+                <span th:text="${tag.name}">標籤標籤</span> <div class="detail" th:text="${#arrays.length(tag.blogs)}">８７</div>
             </a>
         </div>
-        <!--top attached上不連結 下連結-->
+
         <div class="ui top attached teal segment">
-            <!--            文章列表-->
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-
+            <div class="ui padded vertical segment m-padded-tb-large" th:each="blog : ${page.content}">
+                <div class="ui middle aligned mobile reversed stackable grid" >
                     <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
+                        <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">靜態頁面模板</a></h3>
+                        <p class="m-text" th:text="|${blog.description}......|">文章內容</p>
+                        <div class="ui grid">
                             <div class="row">
-
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
+                                        <div class="item">
+                                            <img src="https://unsplash.it/100/100?image=1005" th:src="@{${blog.user.avatar}}"  alt="" class="ui avatar image">
+                                            <div class="content"><a href="#" class="header" th:text="${blog.user.nickname}" >Ｈａｒｖｅｙ</a></div>
                                         </div>
                                         <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
+                                            <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2021-03-22</span>
                                         </div>
                                         <div class="item">
-                                            <i class="eye icon"></i> 9487
+                                            <i class="eye icon"></i> <span th:text="${blog.views}">9487</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
+                                    <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">標籤在這裡</a>
                                 </div>
                             </div>
-<!--                            這裡要再查一下-->
                             <div class="row">
                                 <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
+                                    <a href="#" th:href="@{/tags/{id}(id=${tag.id})}" class="ui  basic left pointing label m-padded-mini m-text-thin" th:classappend="${tag.id==activeTagId} ? 'teal'" th:each="tag : ${blog.tags}" th:text="${tag.name}">方法论</a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
                     <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
+                        <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                            <img src="https://unsplash.it/800/450?image=1005" th:src="@{${blog.firstPicture}}"  alt="" class="ui rounded image">
                         </a>
                     </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
 
-                    <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
-                            <div class="row">
-
-                                <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i> 9487
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
-                                </div>
-                            </div>
-                            <!--                            這裡要再查一下-->
-                            <div class="row">
-                                <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-
-                    <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
-                            <div class="row">
-
-                                <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i> 9487
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
-                                </div>
-                            </div>
-                            <!--                            這裡要再查一下-->
-                            <div class="row">
-                                <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-
-                    <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
-                            <div class="row">
-
-                                <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i> 9487
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
-                                </div>
-                            </div>
-                            <!--                            這裡要再查一下-->
-                            <div class="row">
-                                <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-
-                    <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
-                            <div class="row">
-
-                                <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i> 9487
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
-                                </div>
-                            </div>
-                            <!--                            這裡要再查一下-->
-                            <div class="row">
-                                <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-
-                    <div class="eleven wide column">
-                        <h3 class="ui header">夢幻的帛琉，世界上最值得去的海洋天堂</h3>
-                        <p class="m-text">國慶將至，不知道大家準備國慶去哪兒玩呢？如果還沒有訂好地方的話，不妨跟著小編的推薦，
-                            去看看美麗夢幻的帛琉如何？落地簽的帛琉，潛水的天堂，的確是說走就走的好去處，要說帛琉還有哪裡好，
-                            各位看官且跟著小編一起來看~
-                        </p>
-                        <div class="ui stackable grid">
-                            <div class="row">
-
-                                <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="class item">
-                                            <img src="https://picsum.photos/id/1025/800/450" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header">Harvey^_____^</a></div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i> 2021-01-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i> 9487
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank"
-                                       class="ui teal basic label m-padded-tiny m-text-thin">認知升級</a>
-                                </div>
-                            </div>
-                            <!--                            這裡要再查一下-->
-                            <div class="row">
-                                <div class="column">
-                                    <a href="#" class="ui basic teal left pointing label m-padded-mini m-text-thin">方法論</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/1011/800/450" alt="" class="ui rounded image">
-                        </a>
-                    </div>
                 </div>
             </div>
 
         </div>
-        <!--分頁-->
-        <div class="ui bottom attached segment">
+
+        <!--footer-->
+        <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
             <div class="ui middle aligned two column grid">
                 <div class="column">
-                    <a href="#" class="ui mini teal basic button">上一頁</a>
+                    <a href="#" th:href="@{/(page=${page.number}-1)}"  th:unless="${page.first}" class="ui mini teal basic button">上一頁</a>
                 </div>
                 <div class="right aligned column">
-                    <a href="#" class="ui mini teal basic button">下一頁</a>
+                    <a href="#" th:href="@{/(page=${page.number}+1)}"  th:unless="${page.last}" class="ui mini teal basic button">下一頁</a>
                 </div>
             </div>
         </div>
@@ -400,30 +113,29 @@
     </div>
 </div>
 
-
 <br>
 <br>
 <!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img src="../static/images/Qrcode.png" class="ui rounded image" alt="" style="width: 110px">
+                        <img src="../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
                     </div>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">Lastest Blog</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced " >最新Blog</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用戶故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用戶故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用戶故事（User Story）</a>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">聯繫我</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">關於我</h4>
                 <div class="ui inverted link list">
                     <a href="#" class="item m-text-thin">Email：Harvey09613257@gmail.com</a>
                     <a href="#" class="item m-text-thin">TEL : 0900000000</a>
@@ -431,29 +143,24 @@
             </div>
             <div class="seven wide column">
                 <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">這是我的第一個Blog網站 </p>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">這是我的第一個Blog網站</p>
             </div>
-
         </div>
         <div class="ui inverted section divider"></div>
         <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2021 Designed by Harvey</p>
     </div>
 
 </footer>
-
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--/*/</th:block>/*/-->
 
 <script>
-    $('.menu.toggle').click(function (event) {
-        event.preventDefault();
+    $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
 
-
 </script>
-
 </body>
 </html>

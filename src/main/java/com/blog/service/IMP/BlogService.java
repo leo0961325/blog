@@ -19,10 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,10 +105,25 @@ public class BlogService implements IBlogService {
         return iBlogRepository.findAll(pageable);
     }
 
+    //tag used
+    @Override
+    public Page<Blog> listBlog(Long tagId, Pageable pageable) {
+
+        return iBlogRepository.findAll(new Specification<Blog>() {
+            @Override
+            public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+                //Join 關聯查詢
+                Join join = root.join("tags");
+                return cb.equal(join.get("id"),tagId);
+            }
+        },pageable);
+    }
+
     @Override
     public Page<Blog> listBlog(String query, Pageable pageable) {
         return iBlogRepository.findByQuery(query, pageable);
     }
+
 
 
     @Override

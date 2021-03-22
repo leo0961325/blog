@@ -23,6 +23,8 @@ public interface IBlogService {
 
     Page<Blog> listBlog(Pageable pageable);
 
+    Page<Blog> listBlog(Long tagId , Pageable pageable);
+
     Page<Blog> listBlog(String query , Pageable pageable);
 
     List<Blog> listRecommendBlog(Integer size);
