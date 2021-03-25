@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.OrderBy;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public interface IBlogRepository extends JpaRepository<Blog,Long> , JpaSpecifica
         int updateViews(Long id);
 
         //查詢所有年分，並GroupBY，使用JPQL的function
-        @Query("SELECT function('date_format',b.updateTime,'%Y') AS year FROM Blog b  GROUP BY year")
+        @Query("SELECT function('date_format',b.updateTime,'%Y') AS year FROM Blog b  GROUP BY year ORDER BY b.updateTime")
         List<String> findGroupYear();
 
         @Query("SELECT b FROM Blog b WHERE function('date_format' ,b.updateTime,'%Y' ) = ?1")

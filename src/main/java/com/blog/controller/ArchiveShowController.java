@@ -18,7 +18,6 @@ public class ArchiveShowController {
 
 
     @GetMapping("/archives")
-    @OrderBy("year DESC ")
     public String archives(Model model){
 
         model.addAttribute("archiveMap" ,iBlogService.archiveBlog());
