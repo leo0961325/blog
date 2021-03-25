@@ -38,7 +38,8 @@ public interface IBlogRepository extends JpaRepository<Blog,Long> , JpaSpecifica
         int updateViews(Long id);
 
         //查詢所有年分，並GroupBY，使用JPQL的function
-        @Query("SELECT function('date_format',b.updateTime,'%Y') AS year FROM Blog b  GROUP BY year ORDER BY b.updateTime")
+        @Query("SELECT function('date_format',b.updateTime,'%Y') AS year FROM Blog b  GROUP BY year")
+        @OrderBy("year DESC ")
         List<String> findGroupYear();
 
         @Query("SELECT b FROM Blog b WHERE function('date_format' ,b.updateTime,'%Y' ) = ?1")
